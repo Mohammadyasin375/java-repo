@@ -10,7 +10,7 @@ Classes and Packages
 
 2. Access specifiers of a method
 
-- public
+- public 
 - protected
 - default
 - private
@@ -165,6 +165,352 @@ public class CustomerService {
 
 }
 
+Inheritance
+===========
+- Signature
+- Overriding 
+- Overloading
+- Polymorphism 
+
+Signature of a method is calculated using following parameters
+1. Name of the method
+2. Number of Arguments 
+3. Data type of Arguments
+4. Sequence of Data types 
+
+ex. 
+public void m1(int x){ }
+public void m1(int y){ }
+
+-> Signature is Same 
+
+ex. 
+m1(int x,int y)
+m1(int y,int x)
+
+-> Signature is Same 
+
+ex. 
+m1(int x,float y)
+m1(float x,int y)
+
+-> Signature is different 
+
+
+Overriding of method
+====================
+A method is considered to be Overrided if, 
+a. The signature of the method is same in the sub-class &
+b. Following 2 rules are followed
+	1. Return type of the method is same
+	2. The sub-class method should not have weaker access privilege 
+
+Note: If any of above 2 rules(1,2) are violated and if the signature is same, then its CF. 
+
+Overloading of Method
+=====================
+If the signature of the methods is different but names are same then it is overloaded method. 
+
+Note: In Overloading you do not worry about return type or access privilege. 
+
+ex 1. 
+public void m1(int x)
+public void m1(int y)
+: Overriding 
+
+method privilege: 
+- public 
+- protected
+- default
+- private
+
+ex 2.
+protected void m1(int x,int y)
+public void m1(int y,int x)
+: Overriding
+
+ex 3.
+protected void m1(int x,int y)
+void m1(int y,int x)
+: CF
+
+ex 4.
+void m1(int x,int y)
+int m1(int y,int x)
+: CF
+
+ex 5.
+void m1(int x,int y)
+int m1(int y,float x)
+: Overloding
+
+ex 6. 
+public void m1(float y)
+public String m1(int x)
+: overloading
+
+ex 7. 
+public void m1(int y)
+public String m1(int x)
+: cf
+
+
+example: 
+
+package com.main;
+
+public class App {
+	public static void main(String[] args) {
+		 B b=new B();
+		 b.m1();
+		 b.m1(3);
+	}
+}
+
+class A{ //super
+	 public void m1() {
+		System.out.println("m1 in A");
+	}
+}
+
+class B extends A{ //sub
+	protected void m1(int x) {
+		System.out.println("m1 with Args in B");
+		
+	}
+}
+
+Polymorphism
+============
+: Multiple forms of an Object 
+
+-> Syntax
+-> method called polymorphically
+
+Syntax:
+------
+public class App {
+	public static void main(String[] args) {
+		 A a=new A(); //pure object of A
+		 B b=new B(); //pure object of B
+		 
+		 /*
+		  * super-class ref = sub-class obj
+		  */
+		 
+		 A a1 = new B(); //polymorphism 
+		 
+		 B b1 = new A(); //CF -- must be super=sub not the other way round
+	}
+}
+
+class A{ //super
+	
+}
+class B extends A{ //sub
+	
+}
+
+method called from a polymorphic object
+---------------------------------------
+if a method is called from a polymorphic object, we follow a 2 step procedure
+
+Step 1
+------
+go to super class and check if the method is present
+
+if(persent)
+	go to step 2
+else
+	CF
+
+Step 2
+------
+come to sub-class and check if the method is overrided? 
+
+if(overrided)
+	call the overridded(sub-class) version
+else
+	call the super class version
+
+Example:
+public class App {
+	public static void main(String[] args) {
+		 A a=new A();
+		 a.display(); //display in A
+		 B b=new B();
+		 b.display(); //display in B
+		 
+		 A polyobj=new B(); //poly 
+		 polyobj.display(); //display in B
+		 
+		 polyobj.m1();//m1 in A
+		 
+		// polyobj.m2(); //CF : m2 not in A
+	}
+}
+
+class A{ //super
+	public void display() {
+		System.out.println("display in A");
+	}
+	
+	public void m1() {
+		System.out.println("m1 in A");
+	}
+}
+
+class B extends A{ //sub
+	public void display() {
+		System.out.println("display in B");
+	}
+	
+	public void m2() {
+		System.out.println("m2 in B");
+	}
+}
+
+Keywords
+========
+- final : class, method, variable 
+- static : method, variable
+- abstract : class, method
+
+final keyword
+-------------
+final class
+-----------
+If a class is marked as final,It cannot be extended. 
+
+ex.
+public class App {
+	public static void main(String[] args) {
+		A a=new A();
+		a.m1();
+	}
+}
+
+final class A{ //stand alone class 
+	public void m1() {
+		System.out.println("A");
+	}
+}
+
+class B extends A{ // CF. A is final cannot be extended
+	
+}
+
+final method
+------------
+if a method is marked as final, it cannot be overrided. 
+
+ex.
+public class App {
+	public static void main(String[] args) {
+		 B b=new B();
+		 b.m1();
+	}
+}
+
+class A{
+	public final void m1() {
+		System.out.println("m1 in A");
+	}
+	public void m2() {
+		System.out.println("m2 in A");
+	}
+}
+
+class B extends A{
+	/*
+	public void m1() { //CF. cannot override final method
+		System.out.println("m1 in B");
+	}
+	*/
+}
+
+
+final variable
+- If a variable is marked as final, it must be initialized by the programmer. 
+- final variables cannot be assigned a value.
+
+ex.
+class A{
+	int x; //0(JVM)
+	final int y; //CF. final variable must be initialized by the programmer
+	final int z=5; 
+	
+	void m1() {
+		z=5; //CF. The final field A.z cannot be assigned
+	}
+	
+	void m2(final int x,final int y) {
+		
+	}
+}
+
+abstract keyword
+================
+abstract method
+---------------
+- abstract method does not have a body and ends with a semi colon
+
+public abstract void m1();
+
+- abstract method can only be present in an abstract class
+
+ex. 
+abstract class A{
+	public abstract void m1();
+	
+	public void m2() {
+		System.out.println("m2 in A");
+	}
+}
+
+abstract class
+--------------
+- abstract class cannot be instantiated. cannot create an object of an abstract class.
+
+A a=new A(); //CF.  
+
+- If a class extends an abstract class, it has to compulsarily override all the abstract methods of the super class. 
+
+Note: if a sub-class does not wish to override any of the abstract methods of the super-class then it must mark itself as abstract. 
+
+ex. 
+public class App {
+	public static void main(String[] args) {
+		//A a=new A(); //CF> cannot create an object of an abstract class
+		A a=new B(); 
+		a.m1();
+		a.m2();
+	}
+} 
+
+abstract class A{
+	public abstract void m1();
+	
+	public void m2() {
+		System.out.println("m2 in A");
+	}
+}
+
+class B extends A{
+	// B must override m1() 
+	public void m1(){
+		System.out.println("m1 in B");
+	}
+}
+
+
+Case Study
+----------
+You want to implement following methods havin geometry calculations. 
+
+- compute area of circle (pi * r ^2)
+- compute area of rectangle (length * breadth)
+- circumference of the circle (2 * pi * r)
 
 
 
@@ -173,13 +519,7 @@ public class CustomerService {
 
 
 
-
-
-
-
-
-
-
+ 
 
 
 
