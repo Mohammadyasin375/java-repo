@@ -1,0 +1,201 @@
+Object Oriented Programming: Java
+=================================
+
+Classes and Packages
+--------------------
+1. Access specifiers of a class
+
+- public : can be accessed from within all packages
+- default : can be accessed only within same package
+
+2. Access specifiers of a method
+
+- public
+- protected
+- default
+- private
+
+3. Structure of a class
+
+class is made of 2 entities:
+a. variables
+b. methods 
+
+Variables
+---------
+- classified into 2 types 
+a. instance variables
+b. local variables
+
+Instance v/s Local
+------------------
+1. 
+ public class A {
+	 int x;  //instance variable - inside class body
+	 
+	 public void display() {
+		int y; //local variable - inside method body
+	}
+}
+
+2. 
+If Programmer does not initialize instance variable, JVM will initialize it and give a default value. 
+However, if a programmer does not initialiaze local variable, JVM will also not initialize it. 
+But if that variable is used without initilializing, JVM will give ERROR/Compilation Failure(CF)
+
+ex.
+ public class A {
+	 int x;  //int x=0 
+	 float f;//float f=0.0
+	 
+	 public void display() {
+		int y; //y has no value
+		System.out.println(y); //CF
+	}
+} 
+
+3. Scope of Instance variables is in entire class whereas scope of local variables is in the method in which it is declared. 
+
+ex.
+ public class A {
+	 int x=5;  //instance 
+	 
+	public void display() {
+		 int y=6;
+		 System.out.println(x); //5
+	}
+	 
+	public void m1() {
+		System.out.println(x); //5
+		System.out.println(y); //ERROR/CF
+	}
+}
+
+4. Instance variables go in the heap where as local variables are saved on the stack. 
+
+5. when there is a name clash between local and instance variables, JVM prefers local variable. 
+
+ex. 
+ public class A {
+	 int x=5;  //instance
+	 
+	public void display() {
+		int x=10;  //local
+		System.out.println(x); //10
+		System.out.println(this.x);//5
+	}
+}
+
+Note: use 'this' to access instance variables. 
+
+Working with Objects: Heap and Stack
+====================================
+A a=new A(); 
+
+- Reference goes on the stack, and object goes on the heap.
+
+
+A a: Reference variable
+new A() : Object 
+ 
+
+Example: 
+--------
+App.java
+=========
+package com.main;
+
+import com.beans.Customer;
+import com.service.CustomerService;
+
+public class App {
+	public static void main(String[] args) {
+		Customer c1 = new Customer(); 
+		c1.setName("harry potter");
+		c1.setBalance(10000); 
+		
+		Customer c2 = new Customer();
+		c2.setName("ronald weasley");
+		c2.setBalance(8000);
+		
+		CustomerService service = new CustomerService();
+		service.deposit(c1, 5000);
+		
+		System.out.println(c1.getBalance()); //15000
+		
+		service.deposit(c2, 3000);
+		
+		System.out.println(c2.getBalance()); //11000
+	}
+}
+
+Customer.java
+=============
+package com.beans;
+
+public class Customer {
+	private String name; 
+	private double balance;
+	
+	public void setName(String name) {
+		this.name = name;	
+	}
+
+	public void setBalance(double balance) {
+		this.balance=balance;	
+	}
+
+	public double getBalance() {
+		return this.balance;
+	}
+	
+	
+}
+CustomerService.java
+====================
+package com.service;
+
+import com.beans.Customer;
+
+public class CustomerService {
+
+	public void deposit(Customer c, int amount) {
+		c.setBalance(c.getBalance() + amount); 	
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
