@@ -5,12 +5,10 @@ import com.service.B;
 
 public class App {
 	public static void main(String[] args) {
-		Customer c1=new Customer(); 
-		c1.setName("harry potter");
-		c1.setBalance(10000);
+		Customer c1=new Customer("harry potter",10000); 
 		
 		Customer c2 = new Customer(); 
-		c2.setName("ronald weasley");
+		c2.setName("");
 		c2.setBalance(8000);
 		
 		Customer.setRateOfInterest(4.5);

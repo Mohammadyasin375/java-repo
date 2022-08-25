@@ -5,6 +5,20 @@ public class Customer { // C1 C2 C3
 	private double balance;
 	private static double rateOfInterest;
 
+
+	public Customer(String name, double balance) {
+		super();
+		this.name = name;
+		this.balance = balance;
+	}
+
+	
+	public Customer() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
 	public String getName() {
 		return name;
 	}

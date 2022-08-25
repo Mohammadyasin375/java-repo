@@ -1095,9 +1095,84 @@ public class Customer { // C1 C2 C3
 		// TODO Auto-generated constructor stub
 	}
 
+Encapsulation 
+=============
+Encapsulation refers to hidding instance variables of a class from direct access by making them as private. 
+
+public class User {
+	private String name; 
+	private String username; 
+	private String password;
+}
+
+We provide constructors for initializing instance variables and creating objects. 
+
+public class User {
+	private String name; 
+	private String username; 
+	private String password;
+	public User() {
+		super();
+	}
+	public User(String name, String username, String password) {
+		super();
+		this.name = name;
+		this.username = username;
+		this.password = password;
+	}	
+}
+
+We provide public getters and setters for accessing instance variables. 
+
+public class User {
+	private String name;
+	private String username;
+	private String password;
+
+	public User() {
+		super();
+	}
+
+	public User(String name, String username, String password) {
+		super();
+		this.name = name;
+		this.username = username;
+		this.password = password;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+}
+
+We override toString() method of the Object class so than when the programmer tries to display the reference of the class, it gets info about instance variables on that object location rather than the location memory address. 
 
 
-
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", username=" + username + ", password=" + password + "]";
+	}
 
 
 
