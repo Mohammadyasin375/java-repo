@@ -2,6 +2,23 @@ Object Oriented Programming: Java
 =================================
 
 Classes and Packages
+	- Classification of Variables
+	- Working with methods
+Working with Object
+	- Heap & Stack
+Inheritance
+	- Signature
+	- Overriding
+	- Overloading
+	- Polymorphism
+Keywords
+	- final 
+	- abstract 
+	- static 	
+Interface
+
+
+Classes and Packages
 --------------------
 1. Access specifiers of a class
 
@@ -506,31 +523,295 @@ class B extends A{
 
 Case Study
 ----------
-You want to implement following methods havin geometry calculations. 
+You want to implement following methods having geometry calculations. 
 
 - compute area of circle (pi * r ^2)
 - compute area of rectangle (length * breadth)
 - circumference of the circle (2 * pi * r)
 
 
+static keyword
+==============
+static method
+-------------
+- If a programmer marks the method as static, it cannot be overrided by the sub class. However, if the subclass marks its own method as static, it can create its own version of that method. 
+
+example:
+
+public class App {
+	public static void main(String[] args) {
+		 A a=new B();
+		 a.display();
+	}
+} 
+
+class A{ //super
+	public static void display() { //final & static
+		System.out.println("display in A");
+	}
+	
+	public void m1() {
+		System.out.println("m1");
+	}
+}
+
+class B extends A{ //sub-class
+	public static void display(){
+		System.out.println("display in B");
+	}
+}
+
+- static method can be called in 3 possible ways. 
+	- using an Object 
+	- using class-name (preferred way-static way)
+	- directly(not at all preferred)
+
+ex.
+---
+public class Person {
+	public static void personInfo() {
+		System.out.println("I am a person");
+	}
+	
+	public void m1() {
+		System.out.println("m1 in person");
+	}
+}
 
 
+package com.main;
+
+import com.service.Person;
+ 
+import static com.service.Person.personInfo;
+ public class App {
+	public static void main(String[] args) {
+		 /* calling a static method */
+		
+		//Option 1 : using object
+		Person person = new Person();
+		person.personInfo();
+		person.m1();
+		
+		//Option 2 : static way
+		Person.personInfo();
+		
+		//Option 3: directly
+		personInfo();
+	}
+} 
+ 
+static variable
+---------------
+- static variables are saved in static memory of the class
+
+ex.
+public class App {
+	public static void main(String[] args) {
+		A a1 = new A();
+		A a2 = new A();
+		
+		a1.setX(10);
+		a2.setX(12);
+		
+		System.out.println(a1.getX()); //10
+		System.out.println(a2.getX()); //12
+		
+		A.setY(15);
+		
+		System.out.println(A.getY()); //15
+		
+		System.out.println(a1.getY());//15
+		System.out.println(a2.getY());//15
+	}
+}
+
+class A {
+	private int x;
+	private static int y;
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public static int getY() {
+		return y;
+	}
+
+	public static void setY(int y) {
+		A.y = y;
+	}
+
+}
+
+Example 2: 
 
 
+import com.beans.Customer;
 
+public class App {
+	public static void main(String[] args) {
+		Customer c1=new Customer(); 
+		Customer c2=new Customer(); 
+		
+		c1.setName("harry potter");
+		c1.setBalance(10000);
+		
+		c2.setName("ronald weasley");
+		c2.setBalance(8000);
+		
+		Customer.setRateOfInterest(4.0);
+		
+		System.out.println(c1.getRateOfInterest());
+		System.out.println(c2.getRateOfInterest());
+		System.out.println(Customer.getRateOfInterest());
+	}
+}
 
  
+Customer.java
+-------------
+package com.beans;
+
+public class Customer { //C1 C2 C3
+	private String name;
+	private double balance;
+	private static double rateOfInterest;
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public double getBalance() {
+		return balance;
+	}
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+	public static double getRateOfInterest() {
+		return rateOfInterest;
+	}
+	public static void setRateOfInterest(double rateOfInterest) {
+		Customer.rateOfInterest = rateOfInterest;
+	}  
+}
+
+Interface
+=========
+Rule 1:
+-------
+An interface in java, by default, is an abstract entity and hence can not instantiated. 
+
+public interface Inter { 
+//public interface abstract Inter{}
+
+}
+
+Inter i =new Inter(); //CF 
+
+Rule 2
+------
+A variable in interface, by default, is public static and final. 
+
+public interface Inter { 	
+int x;  //public static final int x; 
+//CF. x must be initialized
+	int y=6;
+}
+
+Rule 3
+------
+A method in interface, by default, is public and abstract. 
+
+public interface Inter { 
+	 void m1();   //public abstract void m1();
+	 public abstract void m2(); 
+}
+
+Rule 4
+------
+An Interface can extend other interface
+
+public interface Inter { 
+	  void m1(); 
+}
+
+interface Inter1 extends Inter{
+	//Inter 1 has m1() from Inter
+}
+
+Rule 5: 
+------
+A class implements and interface and must override all the methods of that interface 
+
+ex.
+public interface Inter { 
+	public abstract  void m1(); 
+}
+
+class A implements Inter{
+
+	@Override
+	public void m1() {
+		System.out.println("m1 in A");
+		
+	}
+	
+}
+
+Note: If a class does not wish to override any of the interface methods, then we must mark the class as abstract. 
 
 
+ex. 
+package com.main;
 
+public interface Inter { 
+	public abstract  void m1(); 
+	void m2(); 
+}
 
+abstract class A implements Inter{
 
+	@Override
+	public void m1() {
+		System.out.println("m1 in A");	
+	}
+}
 
+class B extends A{
 
+	@Override
+	public void m2() {
+		System.out.println("m2 in B");	
+	}
+}
 
+App.java
+--------
+package com.main;
 
+public class App {
+	public static void main(String[] args) {
+		 B b=new B();
+		 b.m1();
+		 b.m2();
+	}
+}
 
+Case Study
+==========
+Implement deposit and withdrawal operations for a bank for multiple customers.
+Also calculate interest payable to each customer. 
 
+refer. project code. 
+
+ 
 
 
 
