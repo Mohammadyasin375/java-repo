@@ -16,7 +16,13 @@ Keywords
 	- abstract 
 	- static 	
 Interface
-
+Constructor
+Encapsulation
+Exception Handling
+Arrays
+String
+Collections Framework
+Streams & Lambda Exp** 
 
 Classes and Packages
 --------------------
@@ -812,6 +818,298 @@ Also calculate interest payable to each customer.
 refer. project code. 
 
  
+Constructors
+============
+Rule 1: the name of the constructor should be similar to that of the class and constructors must not have any return type. 
+
+public class Product {
+
+	public Product(){ } //constructor
+}
+
+Rule 2: 
+If a programmer does not create any constructor in the class, JVM will create a default(no-arg) constructor in that class. 
+
+programmer's version
+--------------------
+public class Product {
+
+}
+ 
+JVM's Version
+-------------
+public class Product {
+	public Product() { //default(no arg) constructor
+		
+	}
+}
+
+Rule 3:
+If a programmer creates a constructor, JVM will not create any thing. 
+
+programmers's Version
+---------------------
+public class Product {
+	public Product(int x) {  }
+}
+
+JVM's Version
+-------------
+public class Product {
+	public Product(int x) {  }
+}
+
+Note: JVM does not create any constructor once programmer creates one in the class. 
+
+Rule 4: 
+-------
+A constructor is called whenever an object is created. A class can have multiple constructors provided the signatures are different. 
+
+ex.
+---
+public class Product {
+	public Product() {
+		System.out.println("default");
+	}
+		
+	public Product(int x) {
+		System.out.println("int");
+	}
+	
+	public Product(double x) {
+		System.out.println("double");
+	}
+	
+	public Product(String str) {
+		System.out.println("string");
+	}
+	
+	public Product(String name, double balance) {
+		System.out.println("string + double");
+	}
+}
+
+This is constructor overloading
+
+App.java
+--------
+import com.beans.Product;
+
+public class AppMain {
+	public static void main(String[] args) {
+		Product p1 = new Product(); //default
+		Product p2 = new Product(""); //string
+		Product p3 = new Product("",3440.00); //string+double
+		Product p4 = new Product(33); //int
+		Product p5 = new Product(10.0); //double
+	}
+}
+
+Rule 5:
+-------
+A programmer can call one constructor from within another contructor of the same class using this() method. 
+
+example:
+--------
+package com.beans;
+
+public class Product {
+	public Product() {
+		this("");
+		System.out.println("default");
+	}
+		
+	public Product(int x) {
+		System.out.println("int");
+	}
+	
+	public Product(String str) {
+		this(4);
+		System.out.println("string");
+	}
+
+}
+
+App.java
+--------
+package com.main;
+
+import com.beans.Product;
+
+public class AppMain {
+	public static void main(String[] args) {
+		Product p1 = new Product(); 
+		 
+	}
+}
+output:
+-------
+int
+string
+default
+
+
+Rule 6
+-------
+If a class does not extend any constructor, JVM extends it with Object class. 
+Object class is present inside java.lang package which is by default imported in every java program. 
+
+programmer's version
+--------------------
+public class Product { }
+
+JVM's version
+-------------
+public class Product extends Object{ } 
+
+Rule 7
+------
+JVM always adds a super() statement inside every constructor of the class except those that do not have this() method. 
+
+super() calls the constructor of the super class. 
+
+ex.
+---
+import com.beans.Product;
+
+public class AppMain {
+	public static void main(String[] args) {
+		 B b=new B(); 
+	}
+}
+
+class A extends Object{
+	A(){
+		super(); //--written by JVM
+		System.out.println("A");
+	}
+}
+
+class B extends A{
+	B(){
+		super(); //--written by JVM
+		System.out.println("B");
+	}
+}
+
+ex. 
+---
+
+public class AppMain {
+	public static void main(String[] args) {
+		  B b=new B(3);
+	}
+}
+
+class A {
+	 A(int x){
+		 this("");
+		 System.out.println("int of A");
+	 }
+	 
+	 A(String str){
+		 super(); 
+		 System.out.println("string of A");
+	 }
+	 
+	 A(){
+		 this(4);
+		 System.out.println("default of A");
+	 }
+}
+
+class B extends A{
+	 B(int x){
+		 super();
+		 System.out.println("int of B");
+	 }
+}
+
+O/p:
+---
+string of A
+int of A
+default of A
+int of B
+
+ex:
+--
+class Animal{
+	Animal(String breed){
+		System.out.println("Animal breed");
+	}
+}
+
+class Dog extends Animal{
+	Dog(String breed){
+		System.out.println("Dog breed");
+	}
+}
+
+Dog dog =new Dog("mybreed"); 
+
+o/p:
+---
+CF
+
+Project Insight about constructors
+====================================
+constructors are used in bean classes to initialize instance variables. 
+
+ex.
+
+public class Book {
+	private String isbn;
+	private String title;
+	private double price;
+
+	public Book() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Book(String isbn, String title, double price) {
+		super();
+		this.isbn = isbn;
+		this.title = title;
+		this.price = price;
+	}
+
+
+ex.
+public class Customer { // C1 C2 C3
+	private String name;
+	private double balance;
+	private static double rateOfInterest;
+
+
+	public Customer(String name, double balance) {
+		super();
+		this.name = name;
+		this.balance = balance;
+	}
+
+	
+	public Customer() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
