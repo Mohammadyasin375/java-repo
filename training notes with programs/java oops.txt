@@ -1175,9 +1175,322 @@ We override toString() method of the Object class so than when the programmer tr
 	}
 
 
+Exception Handling
+==================
+Exception class Hierrarchy
+--------------------------
+
+												Throwable
+		
+			Error													Exception
+				AssertionError							IOException					RuntimeException		
+				StackOverFlowError							-FileNotFoundException		- ArithmeticException
+																								- NullPointerException
+																								- ArrayIndexOutOfBoundsE
+																								- ClassCastException
 
 
 
+- If there is a logical problem in the code, then JVM will throw an exception in the output console. 
+
+A.java
+======
+package com.service;
+public class A {
+
+	public double computeDivision(int i, int j) {
+		return i/j;	
+	}
+}
+App.java
+========
+package com.main;
+
+import com.service.A;
+
+public class App {
+	public static void main(String[] args) {
+		A a=new A();
+		double ans = a.computeDivision(10,0);
+		System.out.println("Ans is " + ans);
+		System.out.println("thank you");
+	}
+}
+
+O/P:
+----
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+	at com.service.A.computeDivision(A.java:6)
+	at com.main.App.main(App.java:8)
+
+
+Note: Once the exception was encountered in main method, JVM stops executing the proram itself altogather. 
+
+
+Handle the Exception
+====================
+App.java
+--------
+package com.main;
+
+import com.service.A;
+
+public class App {
+	public static void main(String[] args) {
+		A a=new A();
+		try {
+			double ans = a.computeDivision(10,0);
+			System.out.println("Ans is " + ans);
+		}
+		catch(ArithmeticException e) {
+			System.out.println("/ by zero");
+		}
+		
+		System.out.println("thank you");
+	}
+}
+
+A.java
+------
+package com.service;
+
+public class A {
+
+	public double computeDivision(int i, int j) {
+		return i/j;
+	
+	}
+
+}
+O/P:
+----
+/ by zero
+thank you
+
+
+Throwing an Exception Manually
+==============================
+Example: 
+
+A.java
+-------
+package com.service;
+
+public class A {
+
+	public double computeDivision(int i, int j) {
+		ArithmeticException e = new ArithmeticException();
+		if(j==0 )
+			throw e; 
+		return i/j;
+	}
+
+	public int computeLength(String name) throws NullPointerException,RuntimeException{
+		if(name == null)
+			throw new NullPointerException("name cannot be null"); 
+		if(name.equals(""))
+			throw new RuntimeException("Name cannot be blank");
+		return name.length();
+	}
+
+}
+
+App.java
+--------
+
+import com.service.A;
+
+public class App {
+	public static void main(String[] args) {
+		A a=new A();
+		String name=null;
+		try {
+			int length = a.computeLength(name);
+			System.out.println("length is " + length);
+		}
+		catch(NullPointerException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(RuntimeException e) {
+			System.out.println(e.getMessage());
+		}
+		System.out.println("thank you!!");
+	}
+}
+
+Case Study
+----------
+Take 3 subject marks as input from the user.  
+Compute percent
+Compute grade 
+
+double percent = ((sub1+sub2+sub3) * 100) / 300 
+grade: 
+percent > 75: A
+percent > 60: B
+else		  : C
+
+Validations:
+------------
+sub1 or sub2 or sub3 is less than 0: IllegalArgumentException
+-- (msg) marks must be more than 0 
+
+sub1 or sub2 or sub3 is more than 100:
+RuntimeException
+-- (msg) marks must be less than 100 
+
+Checked v/s Unchecked
+=====================
+If a programmer throws an Unchecked exception, Handling(try-catch) and warning(throws) is optional. 
+where as
+If a programmer throws a Checked exception,
+Handling(try-catch) and warning(throws) is mandatory
+
+example: 
+public class App {
+	public static void main(String[] args) {
+		 B b=new B();
+		 b.m1(); //handling is optional
+		 try {   //handling is mandatory
+			 b.m2();
+		 }
+		 catch(Exception e) {
+			 System.out.println("exception");
+		 }
+	}
+}
+
+class B{
+	void m1() { //warning is optional
+		throw new RuntimeException(); //unchecked exception
+	}
+	
+	void m2() throws Exception { //warning is mandatory
+		throw new Exception();//checked exception
+	}
+}
+
+Working with Self-Defined Exceptions
+====================================
+In a bank app, you have to implement deposit and withdrawal operations. 
+
+Following rules of transaction must be respected while performing this operations: 
+
+-> If the amount for withdrawal is > 50000: show OverTheLimit message. 
+"Cannot withdraw more than 50000 at a time"
+
+-> If the amount > balance : show 
+InsufficientFunds Message. 
+"Amount must be less than balance: no overdraft allowed"
+
+Solution
+--------
+refer git
+
+Try-Catch-finally block 
+=======================
+try{ }
+catch(){ }
+finally{ }
+
+try{ }
+finally{ }
+
+catch(){ } block is optional. finally will always be executed irrespective of weather the catch block is called or not. 
+
+ex.
+
+import java.util.Scanner;
+
+public class App {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		 try {
+			 throw new RuntimeException();
+		 }
+		 catch(RuntimeException e) {
+			 System.out.println("catch");
+		 }
+		 finally { //to release the resource
+			 sc.close();
+			 System.out.println("finally");
+		 }
+	}
+}
+O/P:
+---
+catch
+finally
+
+
+Arrays
+======
+Types of Array Creation
+-----------------------
+ex. 
+public class App {
+	public static void main(String[] args) {
+		//Type 1 : Directly assigning the values
+		int[] x= {5,3,1,6,8,7};
+		System.out.println(x);  //memory location of array from stack
+		System.out.println(x[1]); //3
+		
+		//System.out.println(x[6]); //AIOOBE
+		x[0]=4;
+		System.out.println(x[0]);//4
+		
+		//Type 2: Create an array using the object 
+		int[] y=new int[4];
+		y[0] = 4;
+		y[1] = 3; 
+		System.out.println(y[1]); //3
+		System.out.println(y[2]); //0
+		
+		//Type 3: combination of above 2 types
+		int[] z = new int[]{5,3,1,6,8,7};
+		System.out.println(z[3]); //6
+	}
+}
+
+Array Operations
+================
+ex.
+
+
+import java.util.Arrays;
+
+public class App {
+	public static void main(String[] args) {
+		 Integer[] arr = new Integer[] {5,3,1,6,7,4,2};
+		 
+		 /* Compute the length of the array */
+		 System.out.println(arr.length);//7
+		 
+		 /* Iterate over the array  */
+		 for(int i=0;i<arr.length;i++) { //i=0,1,2,3,4,5,6
+			 System.out.print(arr[i] + " ");
+		 }
+		 System.out.println("\n");
+		 //for-each loop
+		 for(int temp :arr) { //
+			 System.out.print(temp + " ");
+		 }
+		 
+		 /* Sorting the array */
+		 Arrays.sort(arr);
+		 System.out.println("\n After sorting");
+		 for(int temp :arr) { //
+			 System.out.print(temp + " ");
+		 }
+		 System.out.println("\n");
+		 /* Searching the array: binary search */
+		 int index = Arrays.binarySearch(arr, 4);
+		 System.out.println(index); //3
+		 
+		 index = Arrays.binarySearch(arr, 10); //-insertion point - 1 = -8
+		 System.out.println(index); //-8
+	}
+}
 
 
 
