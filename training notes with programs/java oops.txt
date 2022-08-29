@@ -1492,8 +1492,152 @@ public class App {
 	}
 }
 
+Strings
+========
+String can be created in 2 possible ways
 
+- Using String Literal
+- Using String Object
 
+*String Literals go in the Pool memory 
+*String Objects go in the heap memory
+
+Some key features about Pool Memory
+-----------------------------------
+- Pool does not take duplicates. 
+
+String comparision
+------------------
+- equals()
+- == operator
+
+equals() compares values 
+== operator compares locations 
+
+Strings are immutable. Once strings are created in the pool, they do not change on that location. hence they are immutable. 
+
+Example:
+package com.main;
+
+public class StringDemo {
+	public static void main(String[] args) {
+		String s1="harry"; //String Literal -- goes in the pool 
+		String s2 = new String("harry"); //String Object
+		
+		String s3="harry";
+		String s4=new String("harry");
+		
+		/* String comparisions - equals() , == operator*/
+		
+		System.out.println(s1.equals(s2)); //true
+		
+		String s5="Harry";
+		System.out.println(s1.equals(s5)); //false
+		System.out.println(s1.equalsIgnoreCase(s5)); //true
+		
+		System.out.println(s1 == s2); //10X == 100X : false
+		System.out.println(s1 == s3); //10X == 10X : true
+		
+		String s6 = s2; 
+		System.out.println(s6 == s2); //true
+		
+		String s7=null;
+		if( !(s7 == null) )
+			System.out.println(s7.equals(s1));
+		
+		s1="potter";
+		System.out.println(s1); //potter
+		System.out.println(s1 == s3); //20X == 10X : false
+		 
+		s2 = "potter";
+		System.out.println(s2); //potter
+		System.out.println(s6); //harry
+		System.out.println(s6 == s2); //false
+	}
+}
+
+String Operations & Methods
+===========================
+
+public class StringOps {
+	public static void main(String[] args) {
+		/* Conversion from String-double/long & vice-versa */
+		
+		String s1="5";
+		double d = Double.parseDouble(s1);
+		System.out.println(d);//5.0
+		
+		//Double to String
+		Double d1=10.5; 
+		String s2 = d1.toString();
+		System.out.println(s2);
+		
+		double d3=10.5;
+		String s3 = Double.toString(d3); 
+		System.out.println(s3);
+		
+		String str= "harry potter"; //10X
+		System.out.println("Length is: " + str.length()); //12
+		str = str.concat(" hogwards"); //harry potter hogwards : 100X
+		System.out.println(str); //harry potter hogwards
+		
+		String str1="                            jack sparrow                        ";
+		System.out.println(str1.length()); 
+		
+		//trim() gets rid of beginning and trailing whitespace
+		str1 = str1.trim();
+		System.out.println(str1);//jack sparrow
+		System.out.println(str1.length());//12
+		
+		//split
+		String info="harry potter hogwards";
+		String[] arr = info.split(" ");
+		System.out.println("fname: " + arr[0]);
+		System.out.println("lname: " + arr[1]);
+		System.out.println("schname: " + arr[2]);
+	}
+}
+/*
+
+int : Integer
+float: Float
+long : Long
+double : Double
+
+String
+primitives: wrapper class
+*/
+
+StringBuilder
+=============
+ex. 
+
+public class SBDemo {
+	public static void main(String[] args) {
+		StringBuilder sb1=new StringBuilder("harry"); //100X
+		//StringBuilder sb2 = "harry potter"; -- Cannot create literals for StringBuilder class
+		StringBuilder sb2=new StringBuilder("harry"); //200X
+		StringBuilder sb3=new StringBuilder("harry"); //200X
+		System.out.println(sb1.equals(sb2)); //false 100X.equals(200X)
+		System.out.println(sb1 == sb2); //false 100X == 200X 
+		
+		sb1.append(" potter"); //harry potter
+		System.out.println(sb1);//harry potter
+		
+		// name=john 
+		StringBuilder sb4=new StringBuilder("john");
+		System.out.println(sb4.reverse());
+		
+		//conversion: StringBuilder to String
+		System.out.println(sb3.toString().equals(sb2.toString())); //true
+		
+		//String to StringBuilder 
+		String name="john squire";
+		StringBuilder sbName = new StringBuilder(name.toUpperCase());
+		 
+		
+	}
+}
 
 
 

@@ -1,0 +1,222 @@
+Java Collections Framework / Generics and Collections
+=====================================================
+List<I>
+	- ArrayList
+	- LinkedList
+	- Vector
+
+Map	<I>
+	- HashMap
+	- Hashtable
+	- LinkedHashMap
+
+Tree<I>
+	- TreeSet
+	- HashSet 
+
+Comparable & Comparator Interfaces. 
+
+ArrayList
+=========
+P1: 
+
+package com.main;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
+public class App {
+	public static void main(String[] args) {
+		ArrayList<Double> list = new ArrayList<>();
+		list.add(20D);
+		list.add(15d);
+		list.add(12D); 
+		list.add(25.0);
+		
+		System.out.println(list);
+		System.out.println(list.size()); //4
+		
+		/* Iteration */
+		for(Double d : list) { //
+			System.out.print(d + "  ");
+		}
+		
+		/* Sorting: ASC */
+		Collections.sort(list);
+		System.out.println("\n*****After Sorting *********"); 
+		System.out.println(list); //[12.0, 15.0, 20.0, 25.0]
+		
+		Collections.reverse(list);
+		System.out.println(list); //[25.0, 20.0, 15.0, 12.0]
+		
+		/* binary search */
+		Collections.sort(list); ////[12.0, 15.0, 20.0, 25.0]
+		int index = Collections.binarySearch(list, 15.0); 
+		System.out.println(index); //1
+		
+		/* refer elements using index */
+		double e = list.get(1);
+		System.out.println(e);
+		
+		/* remove element from list*/
+		list.remove(20.0);
+		System.out.println(list); //[]
+		System.out.println(list.size()); //3
+		//removeAll() removes all elements from the list 
+		
+	}
+}
+
+Case Study:
+Filter the employees based on given criteria
+
+solution: 
+
+package com.main;
+import java.util.ArrayList;
+import com.beans.Employee;
+public class EmpApp {
+	public static void main(String[] args) {
+		Employee e1 = new Employee(1,"harry",85000,"london");
+		Employee e2 = new Employee(2,"ronald",75000,"surrey");
+		Employee e3 = new Employee(3,"hermione",90000,"london");
+		
+		ArrayList<Employee> list = new ArrayList<>();
+		list.add(e1);
+		list.add(e2);
+		list.add(e3);
+		
+		for(Employee e : list) { //e=e1, e=e2, e=e3
+			System.out.println(e);
+		}
+		
+		//filteration of list 
+		ArrayList<Employee> filteredlist = new ArrayList<>();
+		System.out.println("****Filtered List (salary>80000)**** ");
+		/* Filter the list that has salary > 80000 */
+		for(Employee e : list) { //e=e1, e=e2, e=e3
+			if( e.getSalary() > 80000) {
+				//list.remove(e); -- ConcurrentModificationException
+				filteredlist.add(e);
+			}
+		}
+		
+		for(Employee e : filteredlist) { //e=e1, e=e2, e=e3
+			System.out.println(e);
+		}
+		
+		filteredlist.clear();
+		System.out.println("****Filtered List (city=surrey)**** ");
+		for(Employee e : list) {
+			if(e.getCity().equalsIgnoreCase("surrey"))
+				filteredlist.add(e);
+		}
+		for(Employee e : filteredlist) { //e=e1, e=e2, e=e3
+			System.out.println(e);
+		}
+		
+	}
+}
+
+Case Study: 
+Sorting as per descending Order
+
+program: 
+
+package com.main;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import com.beans.Employee;
+import com.service.EmployeeService;
+
+ 
+public class EmpSortAPp {
+	public static void main(String[] args) {
+		EmployeeService service = new EmployeeService();
+		ArrayList<Employee> list = service.getEmployeeList();
+		
+		/* Sort the list as per salary ASC  */
+		SortAssistAsc sortAssistAsc = new SortAssistAsc();
+		Collections.sort(list,sortAssistAsc );
+		
+		System.out.println("********Sorting ASC**********");
+		for(Employee e : list) {
+			System.out.println(e);
+		}
+		
+		System.out.println("********Sorting Desc**********");
+		/* Sort the list as per salary DESC  */
+		SortAssistDesc sortAssistDesc = new SortAssistDesc();
+		Collections.sort(list,sortAssistDesc );
+		
+		for(Employee e : list) {
+			System.out.println(e);
+		}
+	}
+}
+//e1(80000) , e2(75000)   2 4 =>  
+class SortAssistAsc implements Comparator<Employee>{
+
+	@Override
+	public int compare(Employee e1, Employee e2) {
+		if(e1.getSalary() > e2.getSalary()) {
+			//swap 
+			return 1; 
+		}
+		if(e1.getSalary() == e2.getSalary()) {
+			//same : don't swap
+			return 0; 
+		}
+		if(e1.getSalary() < e2.getSalary()) {
+			//proper ASC order: dont swap
+			return -1; 
+		}
+		
+		return 0;
+	}
+	
+}
+//2 4 : 
+class SortAssistDesc implements Comparator<Employee>{
+
+	@Override
+	public int compare(Employee e1, Employee e2) {
+		if(e1.getSalary() > e2.getSalary()) {
+			//no-swap 
+			return -1; 
+		}
+		if(e1.getSalary() == e2.getSalary()) {
+			//same : don't swap
+			return 0; 
+		}
+		if(e1.getSalary() < e2.getSalary()) {
+			//swap
+			return 1; 
+		}
+		
+		return 0;
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
