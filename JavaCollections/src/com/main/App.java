@@ -1,12 +1,11 @@
 package com.main;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Vector;
 
 public class App {
 	public static void main(String[] args) {
-		ArrayList<Double> list = new ArrayList<>();
+		Vector<Double> list = new Vector<>();
 		list.add(20D);
 		list.add(15d);
 		list.add(12D); 
