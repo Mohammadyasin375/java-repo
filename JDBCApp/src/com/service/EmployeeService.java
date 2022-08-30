@@ -19,4 +19,9 @@ public class EmployeeService {
 		return employeeDB.fetchEmployees();
 	}
 
+	public void deleteEmployee(int id) {
+		employeeDB.deleteEmployee(id);
+		
+	}
+
 }

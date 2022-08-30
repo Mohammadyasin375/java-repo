@@ -14,7 +14,8 @@ public class App {
 		System.out.println("*****JDBC******");
 		System.out.println("1. Insert Employee");
 		System.out.println("2. Display all employee");
-		 
+		System.out.println("3. Delete the employee");
+		
 		int input = sc.nextInt(); //users input
 		
 		switch(input) {
@@ -42,7 +43,13 @@ public class App {
 				System.out.println(e);
 			}
 			break;
-		
+		case 3: 
+			System.out.println("******Delete Employee********");
+			System.out.println("Enter the ID of employee to delete");
+			int id = sc.nextInt();
+			employeeService.deleteEmployee(id);
+			System.out.println("Employee record deleted...");
+			break;
 		}
 		
 	}
