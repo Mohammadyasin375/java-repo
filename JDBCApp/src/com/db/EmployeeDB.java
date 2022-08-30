@@ -3,7 +3,10 @@ package com.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.beans.Employee;
 
@@ -53,6 +56,33 @@ public class EmployeeDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	public List<Employee> fetchEmployees() {
+		dbConnect();
+		String sql="select * from employee";
+		//prepare the query statement
+		List<Employee> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+			while(rst.next()) {
+				Employee e = new Employee(); //100X 200X
+				int id = rst.getInt("id"); //1 2
+				String name = rst.getString("name"); 
+				double salary = rst.getDouble("salary");
+				String city = rst.getString("city");
+				e.setId(id);
+				e.setName(name);
+				e.setSalary(salary);
+				e.setCity(city);
+				list.add(e);
+			}
+		} catch (SQLException e) {
+			 
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
 	}
 }
 /*
