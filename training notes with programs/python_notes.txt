@@ -1,12 +1,11 @@
+Python Programming
+
 Data types + loops/statements + string + Math/Date 
 OOP in Python: classes, variable, methods 
 inheritance
 contructors
 exception handling 
 DB Connection
-
-
-
 
 #working with variables and exploring data types/structures in python 
 
@@ -527,6 +526,229 @@ a=A(list)
 print(a.avgList()) #4.6
 print(a.minList()) #1
 print(a.maxList()) #8
+
+
+Exception Handling
+==================
+
+#Exception handling 
+class A:
+    
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+    
+    def computeDiv(self):
+        try:
+            ans = self.x / self.y
+            print(ans)
+        except ArithmeticError: 
+            print('division by zero not allowed')
+        
+    
+    def takeInput(self):
+        self.x = input('enter no 1')
+        self.x = int(self.x)
+        self.y = int(input('enter no 2'))
+    
+
+x = int(input('enter no 1: '))
+y = int(input('enter no 2: '))
+a=A(x,y)
+a.computeDiv()
+
+O/P:
+----
+enter no 1: 12
+enter no 2: 6
+2.0
+
+enter no 1: 10
+enter no 2: 0
+division by zero not allowed
+
+
+Self Defined Exceptions
+=======================
+Use Case:
+--------- 
+Take marks_secured and total_marks from the user as input. 
+compute percent. 
+compute grade based on following criteria:
+percent>75: A
+percent>60: B
+			: C
+
+validations:
+------------
+if marks_secured > total_marks 
+"Illegal Marks Secured Entered"
+
+if total_marks < 100 
+"Invalid Total Marks Entered"
+
+IllegalMarksError
+InvalidTotalMarksError
+
+Solution: 
+---------
+class IllegalMarksError(Exception):
+    pass
+
+class InvalidTotalMarksError(Exception):
+    pass 
+
+class ExceptionDemo:
+    
+    def __init__(self,marks,total):
+        self.marks_secured = marks
+        self.total_marks = total
+    
+    def computeGrade(self):
+        try:
+            if self.marks_secured > self.total_marks:
+                raise IllegalMarksError()
+            if self.total_marks < 100: 
+                raise InvalidTotalMarksError()
+            
+            percent = (self.marks_secured * 100) / self.total_marks
+            if percent > 75:
+                print('Grade A')
+            elif percent > 60:
+                print('Grade B')
+            else:
+                print('Grade C')
+        
+        except IllegalMarksError: 
+               print('Illegal Marks Secured Entered')
+        except InvalidTotalMarksError:
+                print('Invalid Total Marks Entered')
+        except Exception: 
+                print('Something went wrong')
+                
+                
+marks_secured = int(input('Enter marks secured: ')) 
+total_marks = int(input('Enter total marks: '))   
+e = ExceptionDemo(marks_secured,total_marks)
+e.computeGrade()
+
+
+O/P
+===
+Enter marks secured: 160
+Enter total marks: 200
+Grade A
+
+Enter marks secured: 120
+Enter total marks: 100
+Illegal Marks Secured Entered
+
+Enter marks secured: 85
+Enter total marks: 90
+Invalid Total Marks Entered
+
+DB Connection
+=============
+#DB Connection 
+
+#install mysql package from python libraries
+!pip install mysql_connector 
+
+host="localhost"
+user=root
+password=Password123 / ""
+database=mycompanydb_55555
+
+#import mysql connector 
+import mysql.connector 
+
+#establish the connection 
+mydb = mysql.connector.connect(host="localhost", user="root",password="Password123",database="mycompanydb_55555")
+print(mydb) #<mysql.connector.connection.MySQLConnection object at 0x00000275CD1C2790>
+
+Ex. 
+Program to fetch the data from the database
+
+#import mysql connector 
+import mysql.connector 
+
+#establish the connection 
+con = mysql.connector.connect(host="localhost", user="root",password="",database="mycompanydb_55555")
+ 
+#fetch records from the DB 
+
+#preparing the cursor to execute my query 
+my_cursor = con.cursor()
+
+#create query 
+sql="select * from employee"
+
+#pass it to cursor for execution
+my_cursor.execute(sql)
+
+#fetch results 
+data = my_cursor.fetchall()
+
+for row in data: 
+    print(row)
+
+con.commit()
+
+O/P:
+(2, 'ronald', 75000.0, 'surrey')
+(3, 'hermione', 90000.0, 'london')
+
+ex. 
+Program to insert the records in DB
+
+#import mysql connector 
+import mysql.connector 
+
+#establish the connection 
+con = mysql.connector.connect(host="localhost", user="root",password="",database="mycompanydb_55555")
+ 
+my_cursor = con.cursor() 
+
+sql="insert into employee(name,salary,city) values (%s,%s,%s)"
+
+name = input('Enter the name: ')
+salary = input('Enter the salary: ')
+city = input('Enter the city: ')
+
+values=(name,salary,city)
+
+my_cursor.execute(sql,values)
+
+con.commit()
+
+print(my_cursor.rowcount, ' row inserted')
+
+O/P:
+---
+Enter the name: draco
+Enter the salary: 82000
+Enter the city: london
+1  row inserted
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
