@@ -22,7 +22,12 @@ Exception Handling
 Arrays
 String
 Collections Framework
-Streams & Lambda Exp** 
+JDBC API  
+
+Add-On
+------
+Enums
+Inner Classes
 
 Classes and Packages
 --------------------
@@ -1638,6 +1643,147 @@ public class SBDemo {
 		
 	}
 }
+
+Enumerated Type (Enum)
+======================
+- Enums are used to define limited set of values that can be attached to a variable
+
+ex.
+--
+ 
+public class EnumDemo {
+	public static void main(String[] args) {
+		College college = College.XYZ;
+		System.out.println(college); //XYZ
+		
+		/* Convert enum into String */
+		String str = college.toString();
+		str = str.toLowerCase();
+		System.out.println(str);
+		
+		/* Convert String to Enum */
+		College c = College.valueOf(str.toUpperCase());
+		System.out.println(c); 
+	}
+}
+
+
+
+Ex. Create an Enum College and add marks value to it. 
+
+solution: 
+
+public enum College {
+	ABC(85),PQR(80),XYZ(75);
+	
+	int marks; 
+	
+	College(int marks){
+		this.marks = marks;
+	}
+
+	public int getMarks() {
+		return marks;
+	}
+
+}
+
+
+public class EnumDemo {
+	public static void main(String[] args) {
+		 College col = College.PQR;
+		 System.out.println(col.getMarks());//80
+		 
+		 col = College.XYZ;
+		 System.out.println(col.getMarks());//75
+	}
+} 
+
+
+Inner Classes
+=============
+example:
+
+public class InnerDemo {
+	public static void main(String[] args) {
+		Customer c = new Customer(22343, "harry potter", 10000); 
+		//Customer.Address address = c.new Address("101/2","401092", "mumbai", "MS", "India");
+		Customer.Address address = new Customer.Address("101/2","401092", "mumbai", "MS", "India");
+		c.setAddress(address);
+		System.out.println(c);
+	}
+}
+
+
+class Customer{
+	private int accoutNumber; 
+	private String name; 
+	private double balance; 
+	private Address address; 
+	
+	static class Address{
+		private String addressLine;
+		private String pincode;
+		private String city; 
+		private String state; 
+		private String country;
+		
+		public Address(String addressLine, String pincode, String city, String state, String country) {
+			super();
+			this.addressLine = addressLine;
+			this.pincode = pincode;
+			this.city = city;
+			this.state = state;
+			this.country = country;
+		}
+
+		
+		@Override
+		public String toString() {
+			return "Address [addressLine=" + addressLine + ", pincode=" + pincode + ", city=" + city + ", state="
+					+ state + ", country=" + country + "]";
+		}
+		
+		
+	}
+
+	public Customer(int accoutNumber, String name, double balance) {
+		super();
+		this.accoutNumber = accoutNumber;
+		this.name = name;
+		this.balance = balance;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Customer [accoutNumber=" + accoutNumber + ", name=" + name + ", balance=" + balance + ", address="
+				+ address + "]";
+	}
+
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
