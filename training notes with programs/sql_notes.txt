@@ -581,6 +581,40 @@ perform all ops on this table.
 perform grouping on vendor and category. 
 
 
+UPDATE column values
+====================
+UC: update the name of employees by using upper case names for employees living in surrey. 
+
+update <table-name>
+SET <column=value>
+where <condition>
+
+Solution:
+---------
+mysql> update employee
+    -> SET name = UPPER(name)
+    -> where city='surrey';
+
+UC: give 10% increment in salary for employees that live in manchester. 
+
+Solution:
+---------
+mysql> update employee
+    -> SET salary = salary + (salary * 0.10)
+    -> where city='manchester';
+
+DELETE COLUMN
+=============
+UC: delete employee having id=7
+
+mysql> DELETE from employee where id=7;
+Query OK, 1 row affected (0.02 sec)
+
+
+
+
+
+
 
 
 
