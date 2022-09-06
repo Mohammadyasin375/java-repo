@@ -1,0 +1,586 @@
+Sql Programming: MySql DB 
+=========================
+
+Create the DB
+-------------
+create database mycompanydb_55555;
+
+Select the Database
+-------------------
+use mycompanydb_55555;
+
+create the table (DDL: Data Definition Language)
+----------------
+mysql> create table employee(eid int, ename varchar(255), ecity varchar(255), esalary double);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> describe employee;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| eid     | int(11)      | YES  |     | NULL    |       |
+| ename   | varchar(255) | YES  |     | NULL    |       |
+| ecity   | varchar(255) | YES  |     | NULL    |       |
+| esalary | double       | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+
+drop the table
+--------------
+mysql> drop table employee;
+Query OK, 0 rows affected (0.01 sec)
+
+Working with Constraints
+------------------------
+mysql> create table employee(eid int primary key auto_increment, ename varchar(255) NOT NULL, ecity varchar(255), esalary double default 0);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> describe employee;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| eid     | int(11)      | NO   | PRI | NULL    | auto_increment |
+| ename   | varchar(255) | NO   |     | NULL    |                |
+| ecity   | varchar(255) | YES  |     | NULL    |                |
+| esalary | double       | YES  |     | 0       |                |
++---------+--------------+------+-----+---------+----------------+
+
+Add Column in table using Alter [DML]
+-------------------------------
+mysql> alter table employee ADD eemail varchar(255) not null;
+
+mysql> describe employee;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| eid     | int(11)      | NO   | PRI | NULL    | auto_increment |
+| ename   | varchar(255) | NO   |     | NULL    |                |
+| ecity   | varchar(255) | YES  |     | NULL    |                |
+| esalary | double       | YES  |     | 0       |                |
+| eemail  | varchar(255) | NO   |     | NULL    |                |
++---------+--------------+------+-----+---------+----------------+
+
+Delete column from the table using Alter
+----------------------------------------
+mysql> alter table employee DROP eemail;
+
+mysql> describe employee;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| eid     | int(11)      | NO   | PRI | NULL    | auto_increment |
+| ename   | varchar(255) | NO   |     | NULL    |                |
+| ecity   | varchar(255) | YES  |     | NULL    |                |
+| esalary | double       | YES  |     | 0       |                |
++---------+--------------+------+-----+---------+----------------+
+
+Modify the datatype of existing column
+--------------------------------------
+mysql> alter table employee MODIFY COLUMN ecity text;
+
+mysql> describe employee;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| eid     | int(11)      | NO   | PRI | NULL    | auto_increment |
+| ename   | varchar(255) | NO   |     | NULL    |                |
+| ecity   | text         | YES  |     | NULL    |                |
+| esalary | double       | YES  |     | 0       |                |
++---------+--------------+------+-----+---------+----------------+
+
+Rename columns
+--------------
+mysql> alter table employee
+    -> CHANGE eid id int;
+
+mysql> alter table employee MODIFY COLUMN id int auto_increment;
+
+mysql> describe employee;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| id      | int(11)      | NO   | PRI | NULL    | auto_increment |
+| ename   | varchar(255) | NO   |     | NULL    |                |
+| ecity   | text         | YES  |     | NULL    |                |
+| esalary | double       | YES  |     | 0       |                |
++---------+--------------+------+-----+---------+----------------+
+
+Renaming multiple columns
+-------------------------
+mysql> alter table employee
+    -> CHANGE ename name varchar(255),
+    -> CHANGE ecity city text,
+    -> CHANGE esalary salary double;
+
+mysql> describe employee;
++--------+--------------+------+-----+---------+----------------+
+| Field  | Type         | Null | Key | Default | Extra          |
++--------+--------------+------+-----+---------+----------------+
+| id     | int(11)      | NO   | PRI | NULL    | auto_increment |
+| name   | varchar(255) | YES  |     | NULL    |                |
+| city   | text         | YES  |     | NULL    |                |
+| salary | double       | YES  |     | NULL    |                |
++--------+--------------+------+-----+---------+----------------+
+
+Inserting records in the table
+------------------------------
+insert into employee(name, city, salary) values ('harry potter', 'london', 85000); 
+insert into employee(name, city, salary) values ('ronald weasley', 'surrey', 75000);
+insert into employee(name, city, salary) values ('hermione granger', 'london', 90000);
+insert into employee(name, city, salary) values ('draco malfoy', 'london', 80000);
+insert into employee(name, city, salary) values ('neville longbottom', 'manchester', 70000);
+insert into employee(name, city, salary) values ('ginni weasley', 'surrey', 68000);
+insert into employee(name, city, salary) values ('sedric williams', 'manchester', 72000);
+insert into employee(name, city, salary) values ('lola greenwich', 'london', 84000);
+
+mysql> select * from employee;
++----+--------------------+------------+--------+
+| id | name               | city       | salary |
++----+--------------------+------------+--------+
+|  1 | harry potter       | london     |  85000 |
+|  2 | ronald weasley     | surrey     |  75000 |
+|  3 | hermione granger   | london     |  90000 |
+|  4 | draco malfoy       | london     |  80000 |
+|  5 | neville longbottom | manchester |  70000 |
+|  6 | ginni weasley      | surrey     |  68000 |
+|  7 | sedric williams    | manchester |  72000 |
+|  8 | lola greenwich     | london     |  84000 |
++----+--------------------+------------+--------+
+
+SQL Queries
+===========
+SQL: Structured Query Language
+[DSL]
+select <column-names> 		--mandatory
+from <table-name><alias>	--mandatory
+where <condition>			--filter/criteria -- optional
+group by <column>			--optional
+having <criteria on group func> --optional
+order by column ASC|DESC	--optional
+limit <num_of_rows>			--optional
+offset <start_point>		--optional
+
+Working with projections in select statement
+---------------------------------------------
+mysql> select name
+    -> from employee;
+
+
+mysql> select name,city
+    -> from employee;
+
+
+mysql> select e.name,e.city
+    -> from employee e;    //referencing
+
+
+mysql> select e.name,e.city
+    -> from employee as e;   //renaming
+
+
+mysql> select name as employee_name,  //rename or variables
+		city as employee_city
+       from employee;   
+
+Applying criteria in where clause
+---------------------------------
+
+mysql> select *
+    -> from employee
+    -> where city ='london';
+
+mysql> select *
+    -> from employee
+    -> where salary >= 75000;
+
+mysql> select *
+    -> from employee
+    -> where salary >= 75000 AND city='london';
+
+mysql> select *
+    -> from employee
+    -> where salary >= 75000 OR city='london';
+
+UC: display employees having salary in range 70000 to 80000 
+-----------------------------------------------------------
+mysql> select *
+    -> from employee
+    -> where salary BETWEEN 70000 AND 80000;
+
+mysql> select *
+    -> from employee
+    -> where salary>70000 AND salary<80000;
+
+mysql> select *
+    -> from employee
+    -> where salary NOT BETWEEN 70000 AND 80000;
+
+UC: display employees that belong to one of following city. 
+cities=['london', 'madrid','surrey']
+-----------------------------------------------------------
+
+mysql> select name,city from employee where city='london'
+    -> UNION
+    -> select name,city from employee where city='surrey'
+    -> UNION
+    -> select name,city from employee where city='madrid';
++------------------+--------+
+| name             | city   |
++------------------+--------+
+| harry potter     | london |
+| hermione granger | london |
+| draco malfoy     | london |
+| lola greenwich   | london |
+| ronald weasley   | surrey |
+| ginni weasley    | surrey |
++------------------+--------+ 
+
+mysql> select name,city from employee where city IN ('london', 'madrid','surrey');
++------------------+--------+
+| name             | city   |
++------------------+--------+
+| harry potter     | london |
+| ronald weasley   | surrey |
+| hermione granger | london |
+| draco malfoy     | london |
+| ginni weasley    | surrey |
+| lola greenwich   | london |
++------------------+--------+
+
+mysql> select name,city from employee where city NOT IN ('london', 'madrid','surrey');
++--------------------+------------+
+| name               | city       |
++--------------------+------------+
+| neville longbottom | manchester |
+| sedric williams    | manchester |
++--------------------+------------+
+
+LIKE Keyword
+------------
+UC: display employees having following pattern in their names "ar" 
+
+mysql> select name,city
+    -> from employee
+    -> where name LIKE '%ar%';
++--------------+--------+
+| name         | city   |
++--------------+--------+
+| harry potter | london |
++--------------+--------+
+1 row in set (0.00 sec)
+
+mysql> select name,city
+    -> from employee
+    -> where name LIKE '%gr%';
++------------------+--------+
+| name             | city   |
++------------------+--------+
+| hermione granger | london |
+| lola greenwich   | london |
++------------------+--------+
+2 rows in set (0.00 sec)
+
+UC: display employees having pattern "h" as beginning of their names. 
+
+mysql> select * from employee where name LIKE 'h%';
++----+------------------+--------+--------+
+| id | name             | city   | salary |
++----+------------------+--------+--------+
+|  1 | harry potter     | london |  85000 |
+|  3 | hermione granger | london |  90000 |
++----+------------------+--------+--------+
+
+UC: display employees having pattern "y" as last char of their names. 
+
+mysql> select * from employee where name LIKE '%y';
++----+----------------+--------+--------+
+| id | name           | city   | salary |
++----+----------------+--------+--------+
+|  2 | ronald weasley | surrey |  75000 |
+|  4 | draco malfoy   | london |  80000 |
+|  6 | ginni weasley  | surrey |  68000 |
++----+----------------+--------+--------+
+
+UC: display employees having pattern "on" starting second char in the names. 
+
+mysql> select * from employee where name LIKE '_on%';
++----+----------------+--------+--------+
+| id | name           | city   | salary |
++----+----------------+--------+--------+
+|  2 | ronald weasley | surrey |  75000 |
++----+----------------+--------+--------+
+
+Note: _ is to skip the characters
+
+_o : second char should be o
+o_ : second from end should be o
+__o: third from beginning should be o 
+
+
+SQL
+---
+select
+from
+where 
+
+Aggregate / Grouping Functions
+==============================
+- sum
+- min
+- max
+- avg
+- count 
+
+ex. 
+mysql> select max(salary) from employee;
++-------------+
+| max(salary) |
++-------------+
+|       90000 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> select min(salary) from employee;
++-------------+
+| min(salary) |
++-------------+
+|       68000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(salary) from employee;
++-------------+
+| sum(salary) |
++-------------+
+|      624000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(salary) from employee;
++-------------+
+| avg(salary) |
++-------------+
+|       78000 |
++-------------+
+
+ex. 
+mysql> select COUNT(id) from employee;
++-----------+
+| COUNT(id) |
++-----------+
+|         8 |
++-----------+
+
+UC: display number of employees living in each city. 
+
+select COUNT(id) as number_of_employees
+from employee 
+group by city 
+
+city=london		COUNT(id)=4
+|  1 | harry potter       | london     |  85000 |
+|  3 | hermione granger   | london     |  90000 |
+|  4 | draco malfoy       | london     |  80000 |
+|  8 | lola greenwich     | london     |  84000 |
+
+city=surrey	COUNT(id) = 2
+|  2 | ronald weasley     | surrey     |  75000 |
+|  6 | ginni weasley      | surrey     |  68000 |
+
+city=manchester COUNT(id)=2
+|  5 | neville longbottom | manchester |  70000 |
+|  7 | sedric williams    | manchester |  72000 |
+
+
++------------+---------------------+
+| city       | number_of_employees |
++------------+---------------------+
+| london     |                   4 |
+| manchester |                   2 |
+| surrey     |                   2 |
++------------+---------------------+
+
+UC: compute AVG salary of employees for every city. 
+
+mysql> select city, AVG(salary) as average_salary
+    -> from employee
+    -> group by city;
++------------+----------------+
+| city       | average_salary |
++------------+----------------+
+| london     |          84750 |
+| manchester |          71000 |
+| surrey     |          71500 |
++------------+----------------+
+
+UC: count number of employees in each city.display only those cities having count of employees more than 2. 
+
+[wrong query]
+mysql> select city, COUNT(id) as number_of_employees
+    -> from employee
+    -> where number_of_employees > 2
+    -> group by city;
+
+ERROR 1054 (42S22): Unknown column 'number_of_employees' in 'where clause'
+
+mysql> select city, COUNT(id) as number_of_employees
+    -> from employee
+    -> where COUNT(id) > 2
+    -> group by city;
+ERROR 1111 (HY000): Invalid use of group function
+
+Solution:
+---------
+mysql> select city, COUNT(id) as number_of_employees
+    -> from employee
+    -> group by city
+    -> having number_of_employees>2;
++--------+---------------------+
+| city   | number_of_employees |
++--------+---------------------+
+| london |                   4 |
++--------+---------------------+
+
+Note: Having allows gouping function whereas where clause does not allow group function. 
+
+Order by
+=========
+UC: display city with number of employees in ASC order. 
+
+mysql> select city, count(id)
+    -> from employee
+    -> group by city
+    -> order by count(id) ASC;
++------------+-----------+
+| city       | count(id) |
++------------+-----------+
+| surrey     |         2 |
+| manchester |         2 |
+| london     |         4 |
++------------+-----------+
+3 rows in set (0.02 sec)
+
+mysql> select city, count(id) as count
+    -> from employee
+    -> group by city
+    -> order by count DESC;
++------------+-------+
+| city       | count |
++------------+-------+
+| london     |     4 |
+| surrey     |     2 |
+| manchester |     2 |
++------------+-------+
+3 rows in set (0.02 sec)
+
+mysql> select city, count(id) as count
+    -> from employee
+    -> group by city
+    -> order by count;
++------------+-------+
+| city       | count |
++------------+-------+
+| surrey     |     2 |
+| manchester |     2 |
+| london     |     4 |
++------------+-------+
+3 rows in set (0.02 sec)
+
+limit
+======
+display city with AVG salary. Order by avg salary DESC.  the result set must have only first 2 records. 
+
+mysql> select city, AVG(salary) as avg_salary
+    -> from employee
+    -> group by city
+    -> order by avg_salary DESC
+    -> limit 2;
++--------+------------+
+| city   | avg_salary |
++--------+------------+
+| london |      84750 |
+| surrey |      71500 |
++--------+------------+
+
+UC: In the above query, ignore the city having highest avg salary. 
+
++------------+------------+
+| city       | avg_salary |  Offset
++------------+------------+
+| london     |      84750 |    0 
+| surrey     |      71500 |	 1	
+| manchester |      71000 |    2
++------------+------------+
+
+limit 2
+offset 0 
+
+| london     |      84750 |  
+| surrey     |      71500 | 
+
+limit 2
+offset 1 
+
+| surrey     |      71500 |	 
+| manchester |      71000 | 
+
+limit 2
+offset 2
+
+| manchester |      71000 |  
+
+Solution: 
+---------
+mysql> select city, AVG(salary) as avg_salary
+    -> from employee
+    -> group by city
+    -> order by avg_salary DESC
+    -> limit 2
+    -> offset 1;
++------------+------------+
+| city       | avg_salary |
++------------+------------+
+| surrey     |      71500 |
+| manchester |      71000 |
++------------+------------+
+
+Alternatively 
+-------------
+mysql> select city, AVG(salary) as avg_salary
+    -> from employee
+    -> group by city
+    -> order by avg_salary DESC
+    -> limit 1,2;	<-- 1 is the offset and 2 is limit
++------------+------------+
+| city       | avg_salary |
++------------+------------+
+| surrey     |      71500 |
+| manchester |      71000 |
++------------+------------+
+
+SET Operators
+=============
+- UNION
+- INTERSECT 
+
+ex. 
+
+mysql> select name,city
+    -> from employee
+    -> where city="london"
+    -> INTERSECT
+    -> select name,city
+    -> from employee
+    -> where salary>80000;
+
+equivalent to: 
+where city='london' AND salary>80000
+
+ex. product(id,title,price,vendor,category)
+
+perform all ops on this table. 
+perform grouping on vendor and category. 
+
+
+
+
+
