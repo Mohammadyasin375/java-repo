@@ -881,6 +881,320 @@ mysql> insert into student_course(student_id,course_id,enroll_date) values
     -> (4,2,'2022-07-11'),
     -> (5,3,'2022-07-20');
 
+Queries using manual mapping
+----------------------------
+
+Query 1: 
+--------
+Display all students that live in city 'london'. 
+
+mysql> select s.id,s.name,s.email,a.city
+    -> from student s, address a
+    -> where s.address_id=a.id AND a.city='london';
++----+------------------+--------------------+--------+
+| id | name             | email              | city   |
++----+------------------+--------------------+--------+
+|  1 | harry potter     | harry@gmail.com    | london |
+|  3 | hermione granger | hermione@gmail.com | london |
+|  4 | draco malfoy     | draco@gmail.com    | london |
++----+------------------+--------------------+--------+
+
+Query 2:
+--------
+Display all courses that belong to department 'IT'. 
+
+mysql> select c.name,d.name
+    -> from course c,department d
+    -> where c.department_id = d.id AND d.name='IT';
++------+------+
+| name | name |
++------+------+
+| JAVA | IT   |
+| SQL  | IT   |
++------+------+
+
+Query 3
+-------
+Display student info that have enrolled in course 'Java'. 
+
+mysql> select s.name,s.email,c.name
+    -> from student s, student_course sc,course c
+    -> where s.id=sc.student_id AND
+    -> sc.course_id = c.id AND
+    -> c.name='JAVA';
++------------------+--------------------+------+
+| name             | email              | name |
++------------------+--------------------+------+
+| harry potter     | harry@gmail.com    | JAVA |
+| hermione granger | hermione@gmail.com | JAVA |
++------------------+--------------------+------+
+
+Query 4: 
+--------
+Display the names of courses enrolled by student having email 'ronald@gmail.com'
+
+mysql> select c.name,c.credits,s.name
+    -> from student s, student_course sc,course c
+    -> where s.id=sc.student_id AND
+    -> sc.course_id = c.id AND
+    -> s.email='ronald@gmail.com';
++---------+---------+----------------+
+| name    | credits | name           |
++---------+---------+----------------+
+| ANGULAR |      80 | ronald weasley |
++---------+---------+----------------+
+
+Query 5:
+--------
+display the students associated with 'IT' department. 
+
+mysql> select distinct s.name, d.name
+    -> from student s, student_course sc, course c,department d
+    -> where s.id=sc.student_id AND
+    -> sc.course_id = c.id AND
+    -> c.department_id = d.id AND
+    -> d.name='IT';
++--------------------+------+
+| name               | name |
++--------------------+------+
+| harry potter       | IT   |
+| hermione granger   | IT   |
+| neville longbottom | IT   |
++--------------------+------+
+
+Query 6
+-------
+display the courses enrolled by students living in city 'london'. 
+
+
+Queries using Nested / Sub Queries 
+==================================
+Query 1: 
+--------
+Display all students that live in city 'london'.
+
+mysql> select name
+    -> from student
+    -> where address_id=(select id from address where city='london');
+ERROR 1242 (21000): Subquery returns more than 1 row
+
+Solution:
+---------
+mysql> select name from student where address_id IN 
+(select id from address where city='london');
++------------------+
+| name             |
++------------------+
+| harry potter     |
+| hermione granger |
+| draco malfoy     |
++------------------+
+
+
+Query 2:
+--------
+Display all courses that belong to department 'IT'. 
+
+mysql> select name
+    -> from course
+    -> where department_id IN 
+(select id from department where name='IT');
++------+
+| name |
++------+
+| JAVA |
+| SQL  |
++------+
+
+Query 3
+-------
+Display student info that have enrolled in course 'Java'. 
+
+select name
+from student
+where id IN (select student_id 
+            from student_course
+            where course_id IN (select id 
+                                from course
+                                where name='JAVA'))
+
++------------------+
+| name             |
++------------------+
+| harry potter     |
+| hermione granger |
++------------------+
+
+Query 4: 
+--------
+Display the names of courses enrolled by student having email 'hermione@gmail.com'
+
+Writing Queries with Joins
+==========================
+
+1. INNER JOIN / JOIN  => [Natural Join] 
+2. LEFT JOIN / LEFT OUTER JOIN 
+3. RIGHT JOIN / RIGHT OUTER JOIN
+
+Query 1: 
+--------
+Display all students that live in city 'london'.
+
+mysql> select s.name
+    -> from student s JOIN address a ON s.address_id = a.id
+    -> where a.city='london';
++------------------+
+| name             |
++------------------+
+| harry potter     |
+| hermione granger |
+| draco malfoy     |
++------------------+
+
+Alternatively,
+
+mysql> select s.name
+    -> from student s INNER JOIN address a ON s.address_id = a.id
+    -> where a.city='london';
++------------------+
+| name             |
++------------------+
+| harry potter     |
+| hermione granger |
+| draco malfoy     |
++------------------+
+
+Query 5:
+--------
+display the students associated with 'IT' department.
+
+select distinct s.name
+from student s 
+JOIN student_course sc ON s.id=sc.student_id 
+JOIN course c ON sc.course_id = c.id 
+JOIN department d ON c.department_id = d.id
+where d.name='IT'
+
++--------------------+
+| name               |
++--------------------+
+| harry potter       |
+| hermione granger   |
+| neville longbottom |
++--------------------+
+
+
+LEFT JOIN / LEFT OUTER JOIN
+----------------------------
+
+DDL
+---
+mysql> create table product(id int primary key, name varchar(255), price double, vendor_id int);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table vendor(id int primary key, name varchar(255));
+Query OK, 0 rows affected (0.01 sec)
+
+DML
+---
+mysql> insert into vendor(id,name) values 
+(1,'ABC Electronics'),
+(2, 'XYZ Electronics'),
+(3,'PQR Electronics');
+
+mysql> insert into product(id,name,price,vendor_id)
+    -> values (1,'OPPO A15',16000,1),
+    -> (2,'Apple IPhone SE', 20000,2),
+    -> (3,'Samsung Z12',13000,null);
+
+
+mysql> select * from product;
++----+-----------------+-------+-----------+
+| id | name            | price | vendor_id |
++----+-----------------+-------+-----------+
+|  1 | OPPO A15        | 16000 |         1 |
+|  2 | Apple IPhone SE | 20000 |         2 |
+|  3 | Samsung Z12     | 13000 |      NULL |
++----+-----------------+-------+-----------+
+
+mysql> select * from vendor;
++----+-----------------+
+| id | name            |
++----+-----------------+
+|  1 | ABC Electronics |
+|  2 | XYZ Electronics |
+|  3 | PQR Electronics |
++----+-----------------+
+
+DQL
+---
+List of all products along with vendor info(if available). 
+
+mysql> select *
+    -> from product p JOIN vendor v ON p.vendor_id = v.id;
++----+-----------------+-------+-----------+----+-----------------+
+| id | name            | price | vendor_id | id | name            |
++----+-----------------+-------+-----------+----+-----------------+
+|  1 | OPPO A15        | 16000 |         1 |  1 | ABC Electronics |
+|  2 | Apple IPhone SE | 20000 |         2 |  2 | XYZ Electronics |
++----+-----------------+-------+-----------+----+-----------------+
+
+[Not the result we want. some products are missing.]
+
+
+mysql> select *
+    -> from product p LEFT JOIN vendor v ON p.vendor_id = v.id;
++----+-----------------+-------+-----------+------+-----------------+
+| id | name            | price | vendor_id | id   | name            |
++----+-----------------+-------+-----------+------+-----------------+
+|  1 | OPPO A15        | 16000 |         1 |    1 | ABC Electronics |
+|  2 | Apple IPhone SE | 20000 |         2 |    2 | XYZ Electronics |
+|  3 | Samsung Z12     | 13000 |      NULL | NULL | NULL            |
++----+-----------------+-------+-----------+------+-----------------+
+
+OR
+
+mysql> select *
+    -> from product p LEFT OUTER JOIN vendor v ON p.vendor_id = v.id;
+
+Query: 
+Display all vendors with their product info(if available). 
+
+mysql> select *
+    -> from product p RIGHT JOIN vendor v ON p.vendor_id = v.id;
++------+-----------------+-------+-----------+----+-----------------+
+| id   | name            | price | vendor_id | id | name            |
++------+-----------------+-------+-----------+----+-----------------+
+|    1 | OPPO A15        | 16000 |         1 |  1 | ABC Electronics |
+|    2 | Apple IPhone SE | 20000 |         2 |  2 | XYZ Electronics |
+| NULL | NULL            |  NULL |      NULL |  3 | PQR Electronics |
++------+-----------------+-------+-----------+----+-----------------+
+
+OR 
+
+mysql> select *
+    -> from product p RIGHT OUTER JOIN vendor v ON p.vendor_id = v.id;
+
+
+LEFT + RIGHT JOIN
+=================
+mysql> select *
+    -> from product p LEFT JOIN vendor v ON p.vendor_id = v.id
+    -> UNION
+    -> select *
+    -> from product p RIGHT JOIN vendor v ON p.vendor_id = v.id;
++------+-----------------+-------+-----------+------+-----------------+
+| id   | name            | price | vendor_id | id   | name            |
++------+-----------------+-------+-----------+------+-----------------+
+|    1 | OPPO A15        | 16000 |         1 |    1 | ABC Electronics |
+|    2 | Apple IPhone SE | 20000 |         2 |    2 | XYZ Electronics |
+|    3 | Samsung Z12     | 13000 |      NULL | NULL | NULL            |
+| NULL | NULL            |  NULL |      NULL |    3 | PQR Electronics |
++------+-----------------+-------+-----------+------+-----------------+
+
+
+
+
 
 
 
