@@ -1,5 +1,6 @@
 Sql Programming: MySql DB 
 =========================
+DDL + DML + DQL 
 
 Create the DB
 -------------
@@ -148,8 +149,8 @@ mysql> select * from employee;
 
 SQL Queries
 ===========
-SQL: Structured Query Language
-[DSL]
+SQL: Structured Query Language 
+
 select <column-names> 		--mandatory
 from <table-name><alias>	--mandatory
 where <condition>			--filter/criteria -- optional
@@ -610,10 +611,275 @@ UC: delete employee having id=7
 mysql> DELETE from employee where id=7;
 Query OK, 1 row affected (0.02 sec)
 
+MULTI-TABLE OPERATIONS
+======================
+
+Normalization
+=============
+Anomalies
+---------
+1. Insertion Anomaly
+2. Updation Anomaly
+3. Deletion Anomaly 
+
+To counter anomalies, we use normalization. 
+
+1NF
+- split the large table into smaller tables(entities)
+2NF
+- identify the columns that can be further divided and create a separate table for it
+3NF
+- establish relationships between tables
+BCNF
+- add attributes in realtionship table
+
+Ex.
+Consider a college table having following columns
+
+college(id,student_name,student_email,student_address,
+course_name,course_credits,course_fee,department_name)
+
+Use Normalization and create the schema. 
+
+1NF
+---
+student(id,name,email,address)
+course(id,name,credits,fee)
+department(id,name)
+
+2NF
+---
+student(id,name,email)
+address(id,street,pincode,city)
+course(id,name,credits,fee)
+department(id,name)
+
+3NF
+---
+student M:N course  : create separate relation table
+student 1:1 address : add address_id in student or vice-versa
+course  M:1 department : add department_id in course
+
+student(id,name,email,address_id)
+address(id,hno,pincode,city)
+course(id,name,credits,fee,department_id)
+department(id,name)
+student_course(student_id,course_id)
+
+BCNF
+----
+add column in relationship table. 
+student enrolls in course at a specific date.
+
+student_course(student_id,course_id,enroll_date)
 
 
+Final Schema
+------------
+student(id,name,email,address_id)
+address(id,hno,pincode,city)
+course(id,name,credits,fee,department_id)
+department(id,name)
+student_course(student_id,course_id,enroll_date)
 
 
+Practice: 
+---------
+An employees works on project which belongs to department. 
+
+company(id,employee_name,employee_email,employee_address,
+project_title,project_budget,department_name)
+
+Business rules for relationships:
+- 1 employee has 1 address. 
+- 1 employee works on many projects and 1 project can have many employees
+- 1 department has many courses and 1 course has 1 department. 
+
+Create a Schema and draw ER diagram on MySqlWorkbench: 
+
+
+-- MySQL Workbench Forward Engineering
+
+
+-- -----------------------------------------------------
+-- Schema college_55555
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema college_55555
+-- -----------------------------------------------------
+
+CREATE SCHEMA IF NOT EXISTS `college_55555` DEFAULT CHARACTER SET utf8 ;
+USE `college_55555` ;
+
+-- -----------------------------------------------------
+-- Table `college_55555`.`address`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `college_55555`.`address` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `street` VARCHAR(255) NOT NULL,
+  `pincode` VARCHAR(45) NOT NULL,
+  `city` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `college_55555`.`student`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `college_55555`.`student` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `address_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_student_address1_idx` (`address_id` ASC) ,
+  CONSTRAINT `fk_student_address1`
+    FOREIGN KEY (`address_id`)
+    REFERENCES `college_55555`.`address` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `college_55555`.`department`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `college_55555`.`department` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `college_55555`.`course`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `college_55555`.`course` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `credits` INT NOT NULL,
+  `fee` DOUBLE NOT NULL,
+  `department_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_course_department1_idx` (`department_id` ASC) ,
+  CONSTRAINT `fk_course_department1`
+    FOREIGN KEY (`department_id`)
+    REFERENCES `college_55555`.`department` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `college_55555`.`student_course`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `college_55555`.`student_course` (
+  `student_id` INT NOT NULL,
+  `course_id` INT NOT NULL,
+  `enroll_date` DATE NULL,
+  PRIMARY KEY (`student_id`, `course_id`),
+  INDEX `fk_student_has_course_course1_idx` (`course_id` ASC) ,
+  INDEX `fk_student_has_course_student_idx` (`student_id` ASC) ,
+  CONSTRAINT `fk_student_has_course_student`
+    FOREIGN KEY (`student_id`)
+    REFERENCES `college_55555`.`student` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_student_has_course_course1`
+    FOREIGN KEY (`course_id`)
+    REFERENCES `college_55555`.`course` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+Insertions
+==========
+mysql> insert into address(street,pincode,city) values('101 kingston avenue','TW31SE','london');
+
+mysql> insert into student(name,email,address_id) values ('harry potter','harry@gmail.com',1);
+
+mysql> insert into address(street,pincode,city) values('23 Isleworth lane','TW21DE','surrey');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into student(name,email,address_id) values ('ronald weasley','ronald@gmail.com',2);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into address(street,pincode,city) values('222 Harbard Lane','LS33DF','london');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into student(name,email,address_id) values ('hermione granger','hermione@gmail.com',3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into address(street,pincode,city) values('154 kensington avenue','KS42CV','london');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into student(name,email,address_id) values ('draco malfoy','draco@gmail.com',4);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into address(street,pincode,city) values('89 shepards bush','SHGE45','surrey');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into student(name,email,address_id) values ('neville longbottom','neville@gmail.com',5);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from student;
++----+--------------------+--------------------+------------+
+| id | name               | email              | address_id |
++----+--------------------+--------------------+------------+
+|  1 | harry potter       | harry@gmail.com    |          1 |
+|  2 | ronald weasley     | ronald@gmail.com   |          2 |
+|  3 | hermione granger   | hermione@gmail.com |          3 |
+|  4 | draco malfoy       | draco@gmail.com    |          4 |
+|  5 | neville longbottom | neville@gmail.com  |          5 |
++----+--------------------+--------------------+------------+
+
+mysql> select * from address;
++----+-----------------------+---------+--------+
+| id | street                | pincode | city   |
++----+-----------------------+---------+--------+
+|  1 | 101 kingston avenue   | TW31SE  | london |
+|  2 | 23 Isleworth lane     | TW21DE  | surrey |
+|  3 | 222 Harbard Lane      | LS33DF  | london |
+|  4 | 154 kensington avenue | KS42CV  | london |
+|  5 | 89 shepards bush      | SHGE45  | surrey |
++----+-----------------------+---------+--------+
+
+mysql> insert into department(name) values ('IT'),('CS');
+
+mysql> insert into course(name,credits,fee,department_id) values
+    -> ('JAVA', 100, 10000, 1),
+    -> ('ANGULAR', 80, 9000,2),
+    -> ('SQL', 70,8500,1),
+    -> ('PYTHON',75,8000,2);
+
+mysql> select * from course;
++----+---------+---------+-------+---------------+
+| id | name    | credits | fee   | department_id |
++----+---------+---------+-------+---------------+
+|  1 | JAVA    |     100 | 10000 |             1 |
+|  2 | ANGULAR |      80 |  9000 |             2 |
+|  3 | SQL     |      70 |  8500 |             1 |
+|  4 | PYTHON  |      75 |  8000 |             2 |
++----+---------+---------+-------+---------------+
+
+mysql> select * from department;
++----+------+
+| id | name |
++----+------+
+|  1 | IT   |
+|  2 | CS   |
++----+------+
+
+mysql> insert into student_course(student_id,course_id,enroll_date) values
+    -> (1,1,'2022-07-10'),
+    -> (1,4,'2022-07-12'),
+    -> (2,2,'2022-07-15'),
+    -> (3,1,'2022-07-08'),
+    -> (3,2,'2022-07-08'),
+    -> (3,3,'2022-07-08'),
+    -> (4,2,'2022-07-11'),
+    -> (5,3,'2022-07-20');
 
 
 
