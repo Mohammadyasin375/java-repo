@@ -1,6 +1,3 @@
-PL/SQL Notes
-------------
-
 SET SERVEROUTPUT ON
 
 create table employee_55555(
@@ -355,30 +352,95 @@ BEGIN
 END;
 /
 
+-- compute total salary of all employee using function
+
+create or replace function sum_emp_55555 RETURN number IS
+
+sum_emp number(10) := 0; 
+BEGIN
+    select SUM(salary) into sum_emp
+    from employee_55555; 
+    
+    RETURN sum_emp;
+END;
+/
+
+BEGIN
+    dbms_output.put_line(sum_emp_55555());
+END;
+/
+-- compute number of employees in given department using function
+
+create or replace function count_emp_55555(dept IN employee_55555.department%TYPE) RETURN number IS
+cnt number(3) := 0;
+BEGIN
+    select COUNT(emp_id) into cnt
+    from employee_55555
+    where department = dept; 
+    
+    return cnt;
+END; 
+/
 
 
+BEGIN
+    dbms_output.put_line(count_emp_55555('sales'));
+END;
+/
+
+/*
+    Create a trigger to maintain log for UPDATE operation on salary on employee_55555 table. 
+*/
+
+-- create log table 
+CREATE table emp_sal_log(emp_id number(10), old_salary number(10,2), new_salary number(10,2), diff number(10,2)); 
+
+--Write the trigger to detect UPDATE and perform insert op in log table. 
 
 
+CREATE OR REPLACE TRIGGER emp_sal_trg AFTER UPDATE ON  employee_55555           --BEFORE is also possible 
+FOR EACH ROW 
+DECLARE
+    diff_salary number; 
+BEGIN
+    diff_salary := :NEW.salary - :OLD.salary;
+    INSERT INTO emp_sal_log VALUES (:NEW.emp_id,:OLD.salary,:NEW.salary, diff_salary); 
+END;
+/
+
+UPDATE employee_55555 SET salary=120000 WHERE emp_id=6; 
+ 
+select * from emp_sal_log;
+ 
+select * from employee_55555;
+
+UPDATE employee_55555 SET salary=110000 WHERE emp_id=1; 
 
 
+-- Cursors : Implicit and Explicit Cursors  : Implicit(ROWTYPE, ISOPEN, FOUND, NOTFOUND)
+/* Display all employees based on given branch */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+CREATE OR REPLACE PROCEDURE get_emp_by_branch(emp_branch IN employee_55555.branch%TYPE) IS
+--create a cursor
+CURSOR emp_cur IS   --explicit cursor
+    SELECT emp_id, emp_name,branch,department,salary 
+    from employee_55555
+    where branch = emp_branch;
+    
+    emp_row emp_cur%ROWTYPE; --implicit
+BEGIN
+    IF NOT emp_cur%ISOPEN THEN  -- implicit
+        OPEN emp_cur; 
+    END IF; 
+    
+    --loop over the cursor 
+    LOOP
+        FETCH emp_cur INTO emp_row; 
+        EXIT WHEN emp_cur%NOTFOUND; --implicit
+        dbms_output.put_line(emp_row.emp_id || ' ' || emp_row.emp_name || ' ' || emp_row.salary); 
+    END LOOP; 
+    
+    CLOSE emp_cur; 
+END;
+/
+EXEC get_emp_by_branch('london');
