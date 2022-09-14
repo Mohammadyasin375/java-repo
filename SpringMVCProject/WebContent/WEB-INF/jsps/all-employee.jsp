@@ -1,3 +1,4 @@
+<%@page import="com.spring.main.model.Employee"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -8,16 +9,14 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>Dashboard</h1>
-<%=request.getAttribute("list") %>
+<h1>All Employees</h1>
 
-<hr>
-<% 
-	List<Integer> list = (List<Integer>) 
-				request.getAttribute("list");
+<%
+	List<Employee> list = 
+	(List<Employee>)request.getAttribute("list");
 
-	for(int temp : list){
-		out.print(temp + "<br />");
+	for(Employee e : list){
+		out.print(e + "<br />");
 	}
 %>
 </body>
