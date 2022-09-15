@@ -51,6 +51,18 @@ public class EmployeeDB {
 		 jdbc.update(sql, map);
 		
 	}
+
+	public void processEdit(Employee employee) {
+		Map<String,Object> map =new HashMap<>();
+		map.put("id", employee.getId());
+		map.put("name",employee.getName());
+		map.put("city", employee.getCity());
+		map.put("salary",employee.getSalary());
+		
+		String sql="update employee SET name=:name,salary=:salary,city=:city where id=:id";
+		 jdbc.update(sql, map);
+		
+	}
 }
 
 class A implements RowMapper<Employee>{

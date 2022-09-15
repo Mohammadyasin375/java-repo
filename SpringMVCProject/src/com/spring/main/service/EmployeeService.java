@@ -30,4 +30,9 @@ public class EmployeeService {
 		
 	}
 
+	public void processEdit(Employee employee) {
+		employeeDB.processEdit(employee);
+		
+	}
+
 }
