@@ -28,10 +28,8 @@ public class EmployeeDB {
 
 	public List<Employee> fetchAllEmployees() {
 		String sql="select * from employee";
-		return jdbc.query(sql, new A());
-		 
+		return jdbc.query(sql, new A()); 
 	}
-
 }
 
 class A implements RowMapper<Employee>{
