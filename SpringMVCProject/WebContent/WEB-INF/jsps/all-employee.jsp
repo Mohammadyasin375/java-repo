@@ -14,7 +14,7 @@
 	.emp_block{
 		border: 1px solid #000;
 		padding: 20px;
-		width: 55%;
+		width: 60%;
 		float: left;	
 		margin: 10px;
 		background: gray;
@@ -25,7 +25,7 @@
 	.emp_block1{
 		border: 1px solid #000;
 		padding: 20px;
-		width: 35%;
+		width: 30%;
 		float: left;	
 		margin: 10px;
 		background: gray;
@@ -47,7 +47,11 @@
 	(List<Employee>)request.getAttribute("list");
 
 	for(Employee e : list){
-		out.print(e + "<br />");
+%>
+	<%=e %> &nbsp;&nbsp;  <a href="<%=request.getContextPath() %>/delete-employee?id=<%=e.getId() %>" 
+		onclick='return confirm("Are you sure you want to delete?")'>delete</a>
+	<br />
+<% 
 	}
 %>
 </div>

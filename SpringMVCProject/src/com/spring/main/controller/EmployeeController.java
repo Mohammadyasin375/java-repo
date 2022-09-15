@@ -32,19 +32,31 @@ public class EmployeeController {
 		//reach out to service and fetch employee object based on ID. 
 		 
 	}
-	
-	public void deleteEmployeeById() {
+	@RequestMapping("/delete-employee")
+	public String deleteEmployeeById(@RequestParam("id") Integer id,Model model) {
+		employeeService.deleteEmployeeById(id);
 		
+		List<Employee> list = 
+				employeeService.fetchAllEmployees(); 
+		model.addAttribute("list", list);
+		return "all-employee";
 	}
 	
 	@RequestMapping("/insert-employee")
-	public void insertEmployee(@RequestParam("ename") String name, 
+	public String insertEmployee(@RequestParam("ename") String name, 
 							   @RequestParam("ecity") String city, 
-							   @RequestParam("esalary") double salary) {
+							   @RequestParam("esalary") double salary ,
+							   Model model) {
 		employee.setName(name);
 		employee.setSalary(salary);
 		employee.setCity(city);
 		
-		System.out.println(employee);
+		employeeService.insertEmployee(employee);
+		
+		List<Employee> list = 
+				employeeService.fetchAllEmployees(); 
+		model.addAttribute("list", list);
+		
+		return "all-employee";
 	}
 }

@@ -2,7 +2,9 @@ package com.spring.main.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -29,6 +31,25 @@ public class EmployeeDB {
 	public List<Employee> fetchAllEmployees() {
 		String sql="select * from employee";
 		return jdbc.query(sql, new A()); 
+	}
+	//insert , update, delete 
+	public void insertEmployee(Employee employee) {
+		Map<String,Object> map =new HashMap<>();
+		map.put("name",employee.getName());
+		map.put("city", employee.getCity());
+		map.put("salary",employee.getSalary());
+		
+		String sql="insert into employee(name,city,salary) "
+				+ "values (:name, :city, :salary)";
+		jdbc.update(sql, map);
+	}
+
+	public void deleteEmployeeById(int id) {
+		Map<String,Integer> map =new HashMap<>();
+		map.put("id",id);
+		 String sql="delete from employee where id=:id";
+		 jdbc.update(sql, map);
+		
 	}
 }
 

@@ -21,4 +21,13 @@ public class EmployeeService {
 		return list;
 	}
 
+	public void insertEmployee(Employee employee) {
+		employeeDB.insertEmployee(employee);
+	}
+
+	public void deleteEmployeeById(int id) {
+		employeeDB.deleteEmployeeById(id);
+		
+	}
+
 }
