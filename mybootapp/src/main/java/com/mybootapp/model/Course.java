@@ -11,8 +11,8 @@ public class Course {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id; 
-	private String name;
-	private Integer credits;
+	private String name;  //findByName(String name)
+	private Integer credits; //findByCredits(int credits)
 	private Double fee; 
 	
 	@ManyToOne

@@ -9,9 +9,9 @@ import javax.persistence.Id;
 public class Department {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private Long id; //findById()
 	
-	private String name;
+	private String name; //findByName()
 
 	public Long getId() {
 		return id;
