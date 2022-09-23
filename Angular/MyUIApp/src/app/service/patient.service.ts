@@ -24,4 +24,13 @@ export class PatientService {
   bookAppointment(appointment: Appointment) :Observable<Appointment>{
     return this.http.post<Appointment>('http://localhost:8181/book/appointment',appointment);
   }
+
+  getDoctorInfo(doctorId: string) :Observable<Doctor>{
+     return this.http.get<Doctor>('http://localhost:8181/doctor/' + doctorId);
+  }
+
+  getSlotInfo(slotId: string) :Observable<Slot>{
+    return this.http.get<Slot>('http://localhost:8181/slot/' + slotId);
+
+  }
 }

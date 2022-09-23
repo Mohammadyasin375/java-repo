@@ -3,10 +3,15 @@ package com.mybootapp.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mybootapp.dto.StudentDto;
@@ -16,6 +21,7 @@ import com.mybootapp.repository.AddressRepository;
 import com.mybootapp.repository.StudentRepository;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:4201"})
 public class StudentController {
 	@Autowired
 	private StudentRepository studentRepository; 
@@ -90,5 +96,21 @@ public class StudentController {
 	public List<Student> getStudentByCity(@PathVariable("city") String city) {
 		List<Student> list = studentRepository.getStudentByCity(city);
 		return list; 
+	}
+	//Activate pagination
+	@GetMapping("/student/all")
+	public List<Student> getAllStudents(
+			@RequestParam(name =  "page", required = false, defaultValue = "0") Integer page, 
+			@RequestParam(name="size", required = false, defaultValue = "10") Integer size) {
+		
+		/* PageRequest does the pagination setting on the basis of page and size, 
+		  We save the setting in pageable ref.  
+		  
+		  http://localhost:8181/student/all?page=1&size=2
+		  */
+		
+		Pageable pageable = PageRequest.of(page, size); 
+		Page<Student> pageData = studentRepository.findAll(pageable);
+		return pageData.getContent(); 
 	}
 }

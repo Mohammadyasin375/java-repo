@@ -16,4 +16,7 @@ public interface CourseRepository extends JpaRepository<Course, Long>{
 	@Query("select c.department from Course c where c.name=?1")
 	Department getDepartmentByCourseName(String cname);
 
+	@Query("select c from Course c where c.id=?1")
+	Course fetchCourseRecord(Long cid);
+
 }

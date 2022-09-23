@@ -69,7 +69,7 @@ public class CourseController {
 	}
 	
 	/* 
-	 * display all courseson the basis of department name.
+	 * display all courses on the basis of department name.
 	 */
 	@GetMapping("/course/department/{dname}")
 	public List<Course> getCourseByDepartmentName(@PathVariable("dname") String dname){

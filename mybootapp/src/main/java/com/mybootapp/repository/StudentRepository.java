@@ -12,4 +12,7 @@ public interface StudentRepository extends JpaRepository<Student, Long>{
 	@Query("select s from Student s where s.address.city=?1")
 	List<Student> getStudentByCity(String city);
 
+	@Query("select s from Student s where s.id=?1")
+	Student fetchStudentRecord(Long sid);
+
 }
